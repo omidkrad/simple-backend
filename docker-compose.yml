@@ -10,9 +10,9 @@ services:
       timeout: 5s
       retries: 5
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-      POSTGRES_DB: "postgres"
+      POSTGRES_DB: "online-store"
       PGDATA: /data/postgres
     volumes:
        - postgres:/data/postgres
