@@ -24,15 +24,60 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This repo demonstrates simple REST API with [NestJS](https://github.com/nestjs/nest) and [Mikro-ORM](https://mikro-orm.io), using PostgreSQL in Docker.
 
-## Installation
+There are two entities defined, `Product` and `Review` with a one-to-many relationship. Only CRUD operations for `Product` are implemented.
 
-```bash
-$ npm install
+Please follow these steps for deployment.
+
+## Deployment
+You will need to have the following installed:
+- NodeJS + npm
+- Docker
+- [Postman app](https://www.postman.com/downloads)
+
+> This was tested on Node v16.1.0, npm 7.11.2, Docker 20.10.8.
+
+Run docker compose to start PosgreSQL and pgAdmin containers.
+```
+$ docker compose up -d
 ```
 
+To open pgAdmin dashboard, open the browser at: `http://localhost:5050/`. It will take a few minutes for the service to load.
+
+When pgAdmin is open, it may ask to set a master password. Enter for example: `admin`.
+
+Click on "Add New Server".
+
+In the "Create - Server" dialog, under **General** tab enter:
+- Name: `my-server`
+
+Under the **Connection** tab enter:
+- Host: `db`
+- Port: `5432`
+- Username: `postgres`
+- Password: `changeme`
+
+Then click on "Save". `my-server` should appear on the left pane under **Servers**. Under `my-server` -> `Databases` there should be an `online-store` database.
+
+In the terminal change directory to the repo, then install modules:
+```
+npm install
+```
+
+Next, run migrations to create tables in the database.
+```
+npx mikro-orm migration:up
+```
+
+After the migration is completed successfully, 3 database tables will be created under `online-store` -> `Schemas` -> `public` -> `Tables`
+- mikro-orm-migrations
+- product
+- review
+
 ## Running the app
+
+Run the app in any of these modes:
 
 ```bash
 # development
@@ -45,29 +90,25 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Trying the end-points
 
-```bash
-# unit tests
-$ npm run test
+Open Postman app and import the collection file: `postman/Product.postman_collection.json`.
 
-# e2e tests
-$ npm run test:e2e
+It will add the `Product` collection with the following HTTP request items:
+- POST Create Product 1
+- POST Create Product 2
+- GET Get Products
+- GET Get Product by ID
+- PATCH Edit Product
+- DEL Remove Product by ID
 
-# test coverage
-$ npm run test:cov
-```
+## Issues:
+This is a very basic CRUD implementation and is in no means a complete solution. There are several things that are missing or could be improved.
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- CRUD for product review entities is not implemented
+- Database provision could be automated further
+- Primary Keys are not efficient randomized Object ID types
+- Filtering and pagination not implemented
+- Tests not implemented
+- API discovery not implemented
+- etc.
