@@ -13,6 +13,7 @@ async function bootstrap() {
       logger: true,
     })
   );
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000, '0.0.0.0');
   console.info(`Application is running on: ${await app.getUrl()}`);
